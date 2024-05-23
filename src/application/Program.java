@@ -5,156 +5,225 @@ import java.util.List;
 import java.util.Scanner;
 
 import model.dao.DaoInstatiate;
+import model.dao.DepartmentDao;
 import model.dao.SellerDao;
 import model.entities.Department;
 import model.entities.Seller;
 
 public class Program {
 	public static void main(String[] args) {
-		
+
 		SellerDao sellerDao = DaoInstatiate.createSellerDao();
-		
-		
+		DepartmentDao departmentDao = DaoInstatiate.createDepartmentDao();
+
 		Scanner sc = new Scanner(System.in);
-				
+
 		System.out.println("Informe o número da operação que deseja realizar");
-		System.out.println("1. Inserir"
-				+ "\n2. Atualizar"
-				+ "\n3. Deletar"
-				+ "\n4. Pesquisar");
+		System.out.println("1. Inserir" + "\n2. Atualizar" + "\n3. Deletar" + "\n4. Pesquisar");
 		int operation = sc.nextInt();
-		
+
 		System.out.println("Gostaria de realizar essa operação para Vendedor ou Departamento?");
 		String table = sc.next();
 		
-		if(table.equals("Vendedor")) {
-			
-			switch(operation) {
-			
+		System.out.println();
+
+		if (table.equals("Vendedor")) {
+
+			switch (operation) {
+
 			case 1:
 				System.out.println("Insira os dados!");
-				
+
 				System.out.print("Nome do vendedor: ");
 				String name = sc.next();
-				
+
 				System.out.print("Email: ");
 				String email = sc.next();
-				
+
 				System.out.print("Data de Aniversário: ");
 				String date = sc.next();
-				
+
 				System.out.print("Salário base: ");
 				double baseSalary = sc.nextDouble();
-				
+
 				System.out.print("Qual o número do departamento dele? ");
 				int departmentId = sc.nextInt();
-				
+
 				Department newDepartment = new Department(departmentId, null);
 				Date birthDate = sellerDao.convertDate(date);
 				Seller newSeller = new Seller(0, name, email, birthDate, baseSalary, newDepartment);
 				sellerDao.insert(newSeller);
 				System.out.println("Inserido id= " + newSeller.getId());
-			break;
-			
+				break;
+
 			case 2:
-				System.out.println("Altere apenas os campos que deseja!");
-				
-				System.out.println("Qual o ID do vendedor?");
+				System.out.println("Altere todos os campos e mude o que precisa!");
+
+				System.out.print("Qual o ID do vendedor?");
 				int id = sc.nextInt();
-				
+
 				Seller seller = sellerDao.findById(id);
-				
+
 				System.out.print("Nome do vendedor: ");
 				seller.setName(name = sc.next());
-				
+
 				System.out.print("Email: ");
 				seller.setEmail(email = sc.next());
-				
+
 				System.out.print("Data de Aniversário: ");
 				date = sc.next();
-				
+
 				System.out.print("Salário base: ");
 				seller.setBaseSalary(baseSalary = sc.nextDouble());
 
 				System.out.print("Qual o número do departamento dele? ");
 				departmentId = sc.nextInt();
-				
+
 				birthDate = sellerDao.convertDate(date);
 				seller.setBirthDate(birthDate);
 				newDepartment = new Department(departmentId, null);
 				seller.setDepartment(newDepartment);
 				sellerDao.update(seller);
 				System.out.println("Update completed");
-			break;
-			
+				break;
+
 			case 3:
 				System.out.println("Delete o ID que precisa!");
-				
+
 				System.out.print("ID: ");
 				id = sc.nextInt();
-				
+
 				seller = sellerDao.findById(id);
 				System.out.println(seller);
-				
+
 				sellerDao.deleteById(id);
 				System.out.println("Deletado com sucesso!");
-			break;
-			
+				break;
+
 			case 4:
 				System.out.println("Pelo o que você deseja procurar?");
-				System.out.println("1. Procurar vendedor por ID"
-						+ "\n2. Procurar vendedor por Departamento"
+				System.out.println("1. Procurar vendedor por ID" + "\n2. Procurar vendedor por Departamento"
 						+ "\n3. Procurar todos os vendedores");
 				int search = sc.nextInt();
-				
-				switch(search) {
-				
+
+				switch (search) {
+
 				case 1:
 					System.out.println("Procurando por id!");
-					
+
 					System.out.print("Qual o ID do vendedor?");
 					id = sc.nextInt();
-					
+
 					seller = sellerDao.findById(id);
 					System.out.println(seller);
-				break;
-				
+					break;
+
 				case 2:
 					System.out.println("Procurando vendedor por departamento!");
-					
+
 					System.out.print("Insira o ID do departamento: ");
 					id = sc.nextInt();
-					
+
 					newDepartment = new Department(id, null);
 					List<Seller> list = sellerDao.findByDepartment(newDepartment);
-					
-					for(Seller obj : list) {
+
+					for (Seller obj : list) {
 						System.out.println(obj);
 					}
-				break;
-				
+					break;
+
 				case 3:
 					System.out.println("Procurando por todos os vendedores!");
-					
+
 					list = sellerDao.findAll();
-					
-					for(Seller obj : list) {
+
+					for (Seller obj : list) {
 						System.out.println(obj);
 					}
-				break;	
+					break;
 				}
 			}
 		}
-		
-		else if(table.equals("Departamento")) {
-			
+
+		else if (table.equals("Departamento")) {
+			switch (operation) {
+
+			case 1:
+				System.out.println("Insira os dados!");
+
+				System.out.print("Nome do departamento: ");
+				String name = sc.next();
+
+				Department newDepartment = new Department(0, name);
+				departmentDao.insert(newDepartment);
+				System.out.println("Inserido id= " + newDepartment.getId());
+				break;
+
+			case 2:
+				System.out.println("Altere todos os campos e mude o que precisa!");
+
+				System.out.print("Qual o ID do departamento? ");
+				int id = sc.nextInt();
+
+				newDepartment = departmentDao.findById(id);
+
+				System.out.print("Nome do Departamento: ");
+				newDepartment.setName(name = sc.next());
+
+				departmentDao.update(newDepartment);
+				System.out.println("Atualizado com sucesso");
+
+				
+				break;
+
+			case 3:
+				System.out.println("Delete o ID que precisa!");
+
+				System.out.print("ID: ");
+				id = sc.nextInt();
+
+				newDepartment = departmentDao.findById(id);
+				System.out.println(newDepartment);
+
+				departmentDao.deleteById(id);
+				System.out.println("Deletado com sucesso!");
+				break;
+
+			case 4:
+				System.out.println("Pelo o que você deseja procurar?");
+				System.out.println("1. Procurar departamento por ID" 
+									+ "\n2. Procurar todos os departamentos");
+				int search = sc.nextInt();
+
+				switch (search) {
+
+				case 1:
+					System.out.println("Procurando por id!");
+
+					System.out.print("Qual o ID do departamento?");
+					id = sc.nextInt();
+
+					newDepartment = departmentDao.findById(id);
+					System.out.println(newDepartment);
+					break;
+
+				case 2:
+					System.out.println("Procurando por todos os departamentos!");
+
+					List<Department> list = departmentDao.findAll();
+
+					for (Department obj : list) {
+						System.out.println(obj);
+					}
+					break;
+				}
+			}
 		}
-		
+
 		else {
 			System.out.println("Algo de errado aconteceu!");
 		}
-		
-		
+
 		sc.close();
 	}
 }
